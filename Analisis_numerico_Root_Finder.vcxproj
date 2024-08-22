@@ -131,7 +131,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Biseccion.h" />
+    <ClInclude Include="Newton-r.h" />
     <ClInclude Include="PuntoFijo.h" />
+    <ClInclude Include="Secante.h" />
     <ClInclude Include="ui.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
