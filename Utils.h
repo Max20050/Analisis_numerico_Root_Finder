@@ -5,7 +5,7 @@
 double pi = 3.14159265359, e = 2.7182818284;
 
 double evaluar(float x) {
-	return ((pow(e, -x)) - x); // 	return (sin(x)+cos(pow(x,2))); <- biseccion
+	return ((pow(e, -x)) - x); // 	; <- biseccion
 }
 
 double evaluarG(float x) {

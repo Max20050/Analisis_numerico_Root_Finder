@@ -15,6 +15,16 @@ namespace UiMenu
         }
     };
 
+    class NoImplementado :public std::exception
+    {
+    public:
+        std::string message;
+        NoImplementado(std::string message) { this->message = message; };
+        const char* what() const throw() {
+            return message.c_str();
+        }
+    };
+
     struct Menu
     {
         int id;
