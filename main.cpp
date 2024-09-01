@@ -7,6 +7,7 @@
 #include "Newton-r.h"
 #include "Secante.h"
 #include "ecuaciones.h"
+#include <vector>
 using namespace std;
 
 void MenuBi() { // BISECCION
@@ -22,8 +23,6 @@ void MenuBi() { // BISECCION
 	};
 	std::cout << r << std::endl;
 }
-
-
 
 
 void MenuPFijo() { // PUNTO FIJO
@@ -48,14 +47,13 @@ int main() {
 		{2,"Metodo del Punto Fijo"},
 		{3,"Metodo de Newton Raphson"},
 		{4,"Metodo de la secante"},
-		{5,"Ec.No Lineal P.Fijo"},
-		{6,"Ec.No Lineal N.Raphson"},
+		{5,"Sistema de Ecuaciones Gauss"},
 		{0,"Salir"}
 	};
 
-	UiMenu::MostrarMenu(7,Menu1);
+	UiMenu::MostrarMenu(6,Menu1);
 
-	int option = UiMenu::selection(Menu1, 6);
+	int option = UiMenu::selection(Menu1, 5);
 
 	switch (option)
 	{
@@ -87,12 +85,15 @@ int main() {
 		std::cout << "Raiz encontrada en x = " << r << std::endl;
 		break;
 	}
-	case 5: { // P FIJO ECUACIONES
-		auto ec1 = [](double x, double y) {return (sqrt(10 - x * y)); }; // <- Remplazar ec1
-		auto ec2 = [](double x, double y) {return (sqrt((57 - x) / (3 * y))); }; // <- Remplazar ec2
-		ecuaciones::point p(0, 0);
-		ecuaciones::run(p, 1.5, 3.5,ec1,ec2);
-		std::cout << p.x << " " << p.y << std::endl;
+	case 5: { // Gauss E.Lineal
+		int n;
+		std::cout << "Ingrese la cantidad incognitas" << std::endl;
+		std::cin >> n;
+		std::vector<std::vector<double>> a;
+		a.resize(n, std::vector<double>(n));
+		std::vector<double> b(n);
+		gauss::cargarDatos(n, a, b);
+		gauss::mostrarMatriz(n, a, b);
 		break;
 	}
 	default:
