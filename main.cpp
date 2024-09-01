@@ -9,7 +9,7 @@
 #include "ecuaciones.h"
 using namespace std;
 
-void MenuBi() {
+void MenuBi() { // BISECCION
 	double r;
 	auto F = [](double x) {return (sin(x) + cos(pow(x, 2))); }; // <- Remplazar return para cada funcion que se quiere pasar
 	try
@@ -23,10 +23,13 @@ void MenuBi() {
 	std::cout << r << std::endl;
 }
 
-void MenuPFijo() {
-	double x0 = 0.7;
+
+
+
+void MenuPFijo() { // PUNTO FIJO
+	double x0 = 3;
 	double r;
-	auto g = [](double x) {return(cos(x)); };
+	auto g = [](double x) {return ((5 - 2 * pow(x, 3) + 11.7 * pow(x, 2)) / 17.7); };
 	__try {
 		r = pfijo::run(x0,g);
 	}
@@ -67,20 +70,24 @@ int main() {
 		MenuPFijo();
 		break;
 	}
-	case 3: {
+	
+	case 3: { // NEWTON RAPHSON
 		double r, x0;
-		x0 = 0;
-		r = newton::run(x0);
+		x0 = 3;
+		auto F = [](double x) {return (2 * pow(x, 3) - 11.7 * pow(x, 2) + 17.7 * x - 5); }; // Funcion F primitiva
+		auto F´ = [](double x) {return (6 * pow(x, 2) - 23.4 * x + 17.7); }; // Funcion F derivada primera
+		r = newton::run(x0,F,F´);
 		std::cout << r << std::endl;
 		break;
 	}
-	case 4: {
-		double r, x0 = 0, x1 = 1;
-		r = secante::run(x0, x1);
+	case 4: { // METODO SECANTE
+		auto F = [](double x) {return (2 * pow(x, 3) - 11.7 * pow(x, 2) + 17.7 * x - 5); }; // Funcion F metodo secante
+		double r, x0 = 3, x1 = 4;
+		r = secante::run(x0, x1,F);
 		std::cout << "Raiz encontrada en x = " << r << std::endl;
 		break;
 	}
-	case 5: {
+	case 5: { // P FIJO ECUACIONES
 		auto ec1 = [](double x, double y) {return (sqrt(10 - x * y)); }; // <- Remplazar ec1
 		auto ec2 = [](double x, double y) {return (sqrt((57 - x) / (3 * y))); }; // <- Remplazar ec2
 		ecuaciones::point p(0, 0);
@@ -93,66 +100,5 @@ int main() {
 	}
 
 	std::cin.ignore();
-
-	// CODE SAVE
-
-
-	/*
-	BISECCION
-	double r;
-	try
-	{
-		r = biseccion::run(NULL);
-	}
-	catch (bad_alloc& ex)
-	{
-		std::cout << "Memoria insuficiente, pruebe con un numero menor de error" << std::endl;
-	};
-	std::cout << r << std::endl;
-	*/
-
-	/*
-	PUNTO FIJO
-	float x0 = 1.2;
-	float r;
-
-	__try {
-		r = pfijo::run(x0);
-	}
-	__except (GetExceptionCode() == EXCEPTION_STACK_OVERFLOW) {
-		std::cerr << "Programa sin memoria" << std::endl;
-		_resetstkoflw();
-		return 0;
-	}
-	std::cout << r << std::endl;
-	*/
-
-	/*
-	* NEWTON RAPHSON
-	double r, x0;
-	x0 = 0;
-	r = newton::run(x0);
-	std::cout << r << std::endl;
-	*/
-
-	/*
-	* SECANTE
-	double r,x0=0,x1=1;
-
-	r = secante::run(x0,x1);
-	std::cout<<"Raiz encontrada en x = " << r << std::endl;
-
-	*/
-
-	/*
-	* ECUACIONES LINEALES - P FIJO
-	ecuaciones::point p(0, 0);
-	ecuaciones::run(p, 1.5, 3.5);
-
-	std::cout << p.x << " " << p.y << std::endl;
-	*/
-
-
-
 	return 0;
 }

@@ -4,7 +4,7 @@
 
 namespace pfijo {
 	
-	double a=0, b=1,error=0.0001;
+	double a=0, b=1,error=0.00001;
 	template<typename Func>
 	double run(double &x0,Func g){
 			double x1;
