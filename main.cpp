@@ -7,6 +7,7 @@
 #include "Newton-r.h"
 #include "Secante.h"
 #include "ecuaciones.h"
+#include "LU.h"
 #include <vector>
 using namespace std;
 
@@ -48,12 +49,14 @@ int main() {
 		{3,"Metodo de Newton Raphson"},
 		{4,"Metodo de la secante"},
 		{5,"Sistema de Ecuaciones Gauss"},
+		{6,"Gauss seidel"},
+		{7,"LU"},
 		{0,"Salir"}
 	};
 
-	UiMenu::MostrarMenu(6,Menu1);
+	UiMenu::MostrarMenu(8,Menu1);
 
-	int option = UiMenu::selection(Menu1, 5);
+	int option = UiMenu::selection(Menu1, 7);
 
 	switch (option)
 	{
@@ -86,16 +89,73 @@ int main() {
 		break;
 	}
 	case 5: { // Gauss E.Lineal
-		int n;
-		std::cout << "Ingrese la cantidad incognitas" << std::endl;
-		std::cin >> n;
-		std::vector<std::vector<double>> a;
-		a.resize(n, std::vector<double>(n));
-		std::vector<double> b(n);
-		gauss::cargarDatos(n, a, b);
-		gauss::mostrarMatriz(n, a, b);
+		std::vector<std::vector<double>> a = {
+			{3, -0.1, -0.2},
+			{0.1, 7.0, -0.3},
+			{0.3, -0.2, 10}
+		};
+		std::vector<double> b = {
+			{7.85,19.30,71.40}
+		};
+		
+		std::vector<double> raices;
+		raices.resize(b.size());
+
+		gauss::mostrarMatriz(a, b);
+		gauss::triangulateMatrix(a,raices,b);
+		std::cout << "La matriz triangulada queda como" << std::endl;
+		gauss::mostrarMatriz(a, b);
+		gauss::mostrarRaices(raices);
 		break;
 	}
+	case 6: { // Gauss Siedel
+		std::vector<double> x = { // Valores iniciales de X
+			{0,0,0}
+		};
+		seidel::point p(0, 0, 0);
+		auto E = [](double x0, double x1, double x2) {return((7.85 - (-0.1 * x1 - 0.2 * x2)) / 3); }; // Ecuacion 1 
+		auto E1 = [](double x0, double x1, double x2) {return((19.30 - (0.1 * x0 - 0.3 * x2)) / 7); }; // Ecuacion 2 
+		auto E2 = [](double x0, double x1, double x2) {return((71.40 - (0.3 * x0 - 0.2 * x1)) / 10); }; // Ecuacion 3 
+		seidel::run(E, E1, E2, x, p);
+		std::cout << p.x << " " << p.y << " " << p.z << std::endl;
+		break;
+	}
+	case 7: {
+	// Vectores y matrices
+		std::vector<std::vector<double>> a = { // matriz a de coeficientes
+			{3, -0.1, -0.2},
+			{0.1, 7.0, -0.3},
+			{0.3, -0.2, 10}
+		};
+		std::vector<double> b = { {7.85,19.30,71.40} }; // Terminos independientes principales
+		std::vector<std::vector<double>> factors{ // Matriz de los multiplicadores m de gauss
+			{0,0,0},
+			{0,0,0},
+			{0,0,0}
+		};
+		std::vector<double> y; // Valores de Y de [L]*[Y]
+		y.resize(a.size());
+
+		std::vector<double> x;
+		x.resize(a.size());
+
+		// Programa
+		LU::CalcularLU(a, factors);
+		std::cout << "La matriz U es: " << std::endl;
+		LU::mostrarMatriz(a);
+		std::cout << std::endl;
+		std::cout << "La matriz L es: " << std::endl;
+		LU::mostrarMatriz(factors);
+		std::cout << std::endl;
+		std::cout << "El vector [Y] es: " << std::endl;
+		LU::calcularY(factors, b, y);
+		printVec(y);
+		LU::calcularX(a, y, x);
+		std::cout << std::endl;
+		std::cout << "La solucion al sistema es: " << std::endl;
+		printVec(x);
+		break;
+	}	
 	default:
 		break;
 	}
