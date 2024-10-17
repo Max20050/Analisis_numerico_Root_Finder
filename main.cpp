@@ -9,6 +9,7 @@
 #include "ecuaciones.h"
 #include "LU.h"
 #include <vector>
+#include "Curvas.h"
 using namespace std;
 
 void MenuBi() { // BISECCION
@@ -51,12 +52,18 @@ int main() {
 		{5,"Sistema de Ecuaciones Gauss"},
 		{6,"Gauss seidel"},
 		{7,"LU"},
+		{8,"Unidad 2"},
 		{0,"Salir"}
 	};
 
+	bool unidad2 = false;
+
+	std::cout << "--------------" << std::endl;
+	std::cout << "UNIDAD 1" << std::endl;
+	std::cout << "--------------" << std::endl;
 	UiMenu::MostrarMenu(8,Menu1);
 
-	int option = UiMenu::selection(Menu1, 7);
+	int option = UiMenu::selection(Menu1, 8);
 
 	switch (option)
 	{
@@ -121,7 +128,7 @@ int main() {
 		break;
 	}
 	case 7: {
-	// Vectores y matrices
+		// Vectores y matrices
 		std::vector<std::vector<double>> a = { // matriz a de coeficientes
 			{3, -0.1, -0.2},
 			{0.1, 7.0, -0.3},
@@ -155,11 +162,84 @@ int main() {
 		std::cout << "La solucion al sistema es: " << std::endl;
 		printVec(x);
 		break;
-	}	
+	}
+	case 8: {
+		unidad2 = true;
+		break;
+	}
 	default:
 		break;
 	}
 
+	system("cls");
+
+	if (unidad2 == true)
+	{
+		std::cout << "--------------" << std::endl;
+		std::cout << "UNIDAD 2" << std::endl;
+		std::cout << "--------------" << std::endl;
+		UiMenu::Menu Menu2[]{
+			{1,"Regresion Lineal"},
+			{2,"Modelo Exponencial"},
+			{3,"Modelo Potencial"},
+			{4,"Modelo de crecimiento"},
+			{5,"Interpolacion Polinomial de newton"},
+			{6,"Polinomio de Lagrange"},
+			{7,"Trazadoras cubicas"},
+			{0,"Salir"}
+		};
+
+		UiMenu::MostrarMenu(7, Menu2);
+		int sel = UiMenu::selection(Menu2,7);
+		
+		switch (sel)
+		{
+		case 1: {
+			float a0, a1;
+			std::vector<float> x = {1,2,3,4,5,6,7}; // Valores de X
+			std::vector<float> y = {0.5,2.5,2,4,3.5,6,5.5}; // Valores de Y
+			reg_lineal::run(x,y,a0,a1);
+			std::cout << "La funcin Lieal nos queda como: y = " << a0 << " + " << a1 << "x" << std::endl;
+			break;
+		}
+		case 2: {
+			std::vector<float> x = { 1,2,3,4,5 }; // Valores de X
+			std::vector<float> y = { 0.5,1.7,3.4,5.7,8.4 }; // Valores de Y
+			float A, B;
+			mod_exp::run(x, y, A, B);
+			std::cout << "La funcion exponencial nos queda como: y = " << A << "e^(" << B << "x)" << std::endl;
+			break;
+		}
+		case 3: {
+			std::vector<float> x = { 1,2,3,4,5 }; // Valores de X
+			std::vector<float> y = { 0.5,1.7,3.4,5.7,8.4 }; // Valores de Y
+			float A, B;
+			mod_pot::run(x, y, A, B);
+			std::cout << "La funcion potencial nos queda como: y = " << A << "X^(" << B <<")" << std::endl;
+			break;
+		}
+		case 4: {
+			// Modelo de crecimiento
+			break;
+		}
+		case 5: {
+			std::vector<float> x;
+			std::vector<float> y;
+			std::vector<float> coeficientes;
+			break;
+		}
+		case 6: {
+
+			break;
+		}
+		default:
+			break;
+		}
+
+
+	}
+
+	system("pause");
 	std::cin.ignore();
 	return 0;
 }
