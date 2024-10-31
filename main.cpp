@@ -10,6 +10,7 @@
 #include "LU.h"
 #include <vector>
 #include "Curvas.h"
+#include "diferenciabilidad.h"
 using namespace std;
 
 void MenuBi() { // BISECCION
@@ -170,6 +171,7 @@ int main() {
 	default:
 		break;
 	}
+	bool DyI = false;
 
 	system("cls");
 
@@ -186,14 +188,17 @@ int main() {
 			{5,"Interpolacion Polinomial de newton"},
 			{6,"Polinomio de Lagrange"},
 			{7,"Trazadoras cubicas"},
+			{8,"Diferenciabilidad e integracion"},
 			{0,"Salir"}
 		};
 
-		UiMenu::MostrarMenu(7, Menu2);
-		int sel = UiMenu::selection(Menu2,7);
-		
+		UiMenu::MostrarMenu(8, Menu2);
+		int sel = UiMenu::selection(Menu2,8);
 		switch (sel)
 		{
+		case 0: {
+			return 0;
+		}
 		case 1: {
 			float a0, a1;
 			std::vector<float> x = {1,2,3,4,5,6,7}; // Valores de X
@@ -222,14 +227,29 @@ int main() {
 			// Modelo de crecimiento
 			break;
 		}
-		case 5: {
-			std::vector<float> x;
-			std::vector<float> y;
-			std::vector<float> coeficientes;
+		case 5: { // Interpolacion de Newton
+			std::vector<double> x = { 1.0000, 2.0000, 3.0000, 5.0000, 6.0000 };
+			std::vector<double> y = { 4.7500, 4.0000, 5.2500, 19.7500, 36.0000 };
+			int n = x.size();
+			vector<vector<double>> dividedDifferences(n, vector<double>(n));
+			vector<double> coeffs = pol_newton::newtonInterpolation(x, y, dividedDifferences);
+			pol_newton::printDividedDifferences(dividedDifferences);
+			std::cout << "El polinomio de newton sin hacer el algebra correspondiente es :" << std::endl;
+			pol_newton::printPolynomial(coeffs, x);
 			break;
 		}
-		case 6: {
-
+		case 6: { // Interpolacion de Lagrange
+			std::vector<double> x = { 0.5000 ,1.0000 ,1.5000 ,2.0000 ,2.5000 ,3.0000 };
+			std::vector<double> y = { 1.0000 ,2.1190 ,2.9100 ,3.9450 ,5.7200 ,8.6950 };
+			std::vector<std::string> L;
+			pol_lagrange::calcularProductorias(L, x);
+			pol_lagrange::mostrarPolinomio(L, y);
+			break;
+		}
+		case 7:
+			break;
+		case 8: {
+			DyI = true;
 			break;
 		}
 		default:
@@ -238,7 +258,98 @@ int main() {
 
 
 	}
+	
 
+	if (DyI == true)
+	{
+		system("cls");
+	UiMenu::Menu M3[]{
+		{1,"Derivada 3 puntos"},
+		{2,"Derivada 5 puntos"},
+		{3,"Metodo de Trapecios"},
+		{4,"Metodo de simpson"},
+		{5,"EDO,Euler"},
+		{6,"EDO,Huen"},
+		{7,"Runge Kutta"},
+		{0,"Salir"}
+	};
+	UiMenu::MostrarMenu(8, M3);
+	int opcion = UiMenu::selection(M3, 8);
+	switch (opcion)
+	{
+	case 0: {
+		return 0;
+	}
+	case 1: {
+		auto F = [](double x) {return pow(2.71, x) * cos(x);};
+		double a = 0.0000, b = 2.0000, h = 0.5000;
+		bool UsandoTabla = true;
+		std::vector<double> evaluaciones = { 0.0000, 0.4207, 0.4546, 0.0706, -0.3784 };
+		if (UsandoTabla == false)
+		{
+			derivada3puntos::EvaluarInicio(evaluaciones, F, a, b, h);
+		}
+		std::vector<double> derivadasPuntuales;
+		derivada3puntos::derivar(evaluaciones, derivadasPuntuales, a, b, h);
+		derivada3puntos::printDerivada(derivadasPuntuales, evaluaciones, a, b, h);
+		break;
+	}
+	case 2: {
+		auto F = [](double x) {return pow(2.71, x) * cos(x);};
+		double a = 0.0000, b = 2.0000, h = 0.5000;
+		bool UsandoTabla = true;
+		std::vector<double> evaluaciones = { 0.0000, 0.4207, 0.4546, 0.0706, -0.3784 };
+		if (UsandoTabla == false)
+		{
+			derivada5puntos::EvaluarInicio(evaluaciones, F, a, b, h);
+		}
+		std::vector<double> derivadasPuntuales;
+		derivada5puntos::derivar(evaluaciones, derivadasPuntuales, a, b, h);
+		derivada5puntos::printDerivada(derivadasPuntuales, evaluaciones, a, b, h);
+		break;
+	}
+	case 3: {
+		double a = 0, b = 2*3.14159265359/20;
+		int n = 8;
+		auto F = [](double x) {return sin(5*x+1);};
+		trapecios::trapecios(a, b, F, n,0,false);
+		break;
+	}
+	case 4: {
+		double a = 0, b = 2*3.14159265359/20;
+		int n = 8;
+		auto F = [](double x) {return sin(5 * x + 1);};
+		simpson::simpson(a, b, F, n,0,false);
+		break;
+	}
+	case 5: {
+		double a = 0.0; 
+		double b = 4.0; 
+		double h = 0.1; 
+		double y0 = 2.0; 
+		euler::euler(a, b, h, y0);
+		break;
+	}
+	case 6: {
+		double a = 0.0;
+		double b = 4.0;
+		double h = 0.1;
+		double y0 = 2.0;
+		heun::heun(a, b, h, y0);
+		break;
+	}
+	case 7: {
+		double a = 0.0; 
+		double b = 4.0; 
+		double h = 0.1; 
+		double y0 = 2.0; 
+		kutta::rungeKutta(a, b, h, y0);
+		break;
+	}
+	default:
+		break;
+	}
+	}
 	system("pause");
 	std::cin.ignore();
 	return 0;

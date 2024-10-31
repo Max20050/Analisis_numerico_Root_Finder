@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClInclude Include="Biseccion.h" />
     <ClInclude Include="Curvas.h" />
+    <ClInclude Include="diferenciabilidad.h" />
     <ClInclude Include="ecuaciones.h" />
     <ClInclude Include="LU.h" />
     <ClInclude Include="Newton-r.h" />
