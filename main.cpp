@@ -19,13 +19,15 @@ void MenuBi() { // BISECCION
 	auto F = [](double x) {return (-0.874 * pow(x, 2) + 1.75 * x + 2.627); }; // <- Remplazar return para cada funcion que se quiere pasar
 	try
 	{
-		r = biseccion::run(NULL,F);
+		biseccion::barrido(F,0.5);
+		biseccion::biseccion(F, -1.5, -1, 0.0001);
+
 	}
 	catch (bad_alloc& ex)
 	{
 		std::cout << "Memoria insuficiente, pruebe con un numero menor de error" << std::endl;
 	};
-	std::cout << r << std::endl;
+//	std::cout << r << std::endl;
 
 }
 
@@ -174,7 +176,7 @@ int main() {
 		// Crear la matriz A de tamaño n x n
 		vector<vector<double>> A = {
 			{1,2},
-			{1.10,2}
+			{1.05,2}
 		};
 		// Calcular el número de condición
 		double condicion = condicion::numeroDeCondicion(A, n);

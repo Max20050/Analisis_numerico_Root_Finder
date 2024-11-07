@@ -3,64 +3,48 @@
 #include<iostream>
 #include <iomanip>
 namespace biseccion {
-	
-	// 1 . detectar en cual de los 2 intervalos esta la funcion.
-	template<typename Func>
-	void buscarIntervalo(double &a, double &b, Func F) {
-		double fa = F(a);
-		double fb;
-		double paso = 0.05;
-		for (double x = a + paso; x <= b; x += paso) {
-			fb = F(x);
-			if (fa * fb < 0) {
-				std::cout << "Intervalo con cambio de signo: [" << a << ", "<< std::setprecision(16) << x << "]" << std::endl;
-				a = fa;
-				b = fb + paso;
-				return;
-			}
-			fa = fb;
-		}
+    using namespace std;
 
-		std::cout << "No se encontró un intervalo con cambio de signo en [" << a << ", " << b << "]" << std::endl;
-	}
+    template <typename Func>
+    void biseccion(Func f, double a, double b, double E) {
+        double c, e = 1;
+        while (e >= E) {
+            c = (a + b) / 2;
+            if ((f(a) * f(c)) < 0) {
+                b = c;
+                c = (a + b) / 2;
+                e = abs(a - c);
+                cout << "error actual: " << e << endl;
+                cout << "el intervalo actual es: (" << a << "," << c << ")\n";
+            }
 
+            else {
+                a = c;
+                c = (a + b) / 2;
+                e = abs(b - c);
+                cout << "error actual: " << e << endl;
+                cout << "el intervalo actual es: (" << b << "," << c << ")\n";
+            }
+        }
 
-	double Error = 0.00001, a =-10, b = 5, e = NULL;
-	template<typename Func>
-	void CalcularIntervalo(double &a, double &b,double &anterior,Func F) {
-		double m = ((a + b) / 2);
-		if (F(a) * F(m) < 0)
-		{
-			b = m;
-			anterior = m;
-		}
-		if (F(m) * F(b) < 0) {
-			std::cout << "Intervalo de raiz" << std::endl;
-			a = m;
-			anterior = m;
-		}
-	}
-	template<typename Func>
-	double run(double anterior,Func F) {
-		double er;
-
-		CalcularIntervalo(a, b, anterior,F);
-		double raiz = ((a + b) / 2);
-		if (F(raiz) == 0)
-		{
-			return raiz;
-		}
-			if (anterior != NULL)
-			{
-				er = CalcularError(anterior, raiz);
-				if (er < Error)
-				{
-					return raiz;
-				}
-				else
-				{
-					return run(anterior,F);
-				}
-			}
-	}
+        cout << "la funcion tiene raiz en: " << (a + c) / 2 << endl;
+    }
+    template <typename Func>
+    void barrido(Func f, double ampl) {
+        double i = -20;
+        double a = -20;
+        double b = a + ampl;
+        while (i < 21) {
+            if ((f(a)*f(b)<0)) {
+                cout << "Hay una raiz en el intervalo: " << a << " y " << b << endl;
+                a = a + ampl;
+                b = b + ampl;
+            }
+            else {
+                a = a + ampl;
+                b = b + ampl;
+            }
+            i += ampl;
+        }
+    }
 }
