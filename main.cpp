@@ -11,11 +11,12 @@
 #include <vector>
 #include "Curvas.h"
 #include "diferenciabilidad.h"
+
 using namespace std;
 
 void MenuBi() { // BISECCION
 	double r;
-	auto F = [](double x) {return (sin(x) + cos(pow(x, 2))); }; // <- Remplazar return para cada funcion que se quiere pasar
+	auto F = [](double x) {return (-0.874 * pow(x, 2) + 1.75 * x + 2.627); }; // <- Remplazar return para cada funcion que se quiere pasar
 	try
 	{
 		r = biseccion::run(NULL,F);
@@ -25,6 +26,7 @@ void MenuBi() { // BISECCION
 		std::cout << "Memoria insuficiente, pruebe con un numero menor de error" << std::endl;
 	};
 	std::cout << r << std::endl;
+
 }
 
 
@@ -54,6 +56,7 @@ int main() {
 		{6,"Gauss seidel"},
 		{7,"LU"},
 		{8,"Unidad 2"},
+		{9,"Calcular numero de condicion"},
 		{0,"Salir"}
 	};
 
@@ -62,9 +65,9 @@ int main() {
 	std::cout << "--------------" << std::endl;
 	std::cout << "UNIDAD 1" << std::endl;
 	std::cout << "--------------" << std::endl;
-	UiMenu::MostrarMenu(8,Menu1);
+	UiMenu::MostrarMenu(10,Menu1);
 
-	int option = UiMenu::selection(Menu1, 8);
+	int option = UiMenu::selection(Menu1, 10);
 
 	switch (option)
 	{
@@ -98,12 +101,11 @@ int main() {
 	}
 	case 5: { // Gauss E.Lineal
 		std::vector<std::vector<double>> a = {
-			{3, -0.1, -0.2},
-			{0.1, 7.0, -0.3},
-			{0.3, -0.2, 10}
+			{1, 2},
+			{1.05, 2},
 		};
 		std::vector<double> b = {
-			{7.85,19.30,71.40}
+			{10.00,10.40}
 		};
 		
 		std::vector<double> raices;
@@ -121,9 +123,9 @@ int main() {
 			{0,0,0}
 		};
 		seidel::point p(0, 0, 0);
-		auto E = [](double x0, double x1, double x2) {return((7.85 - (-0.1 * x1 - 0.2 * x2)) / 3); }; // Ecuacion 1 
-		auto E1 = [](double x0, double x1, double x2) {return((19.30 - (0.1 * x0 - 0.3 * x2)) / 7); }; // Ecuacion 2 
-		auto E2 = [](double x0, double x1, double x2) {return((71.40 - (0.3 * x0 - 0.2 * x1)) / 10); }; // Ecuacion 3 
+		auto E = [](double x0, double x1, double x2) {return(10-2*x1); }; // Ecuacion 1 
+		auto E1 = [](double x0, double x1, double x2) {return((10.4-1.10*x1)/2); }; // Ecuacion 2 
+		auto E2 = [](double x0, double x1, double x2) {return(0); }; // Ecuacion 3 
 		seidel::run(E, E1, E2, x, p);
 		std::cout << p.x << " " << p.y << " " << p.z << std::endl;
 		break;
@@ -131,11 +133,10 @@ int main() {
 	case 7: {
 		// Vectores y matrices
 		std::vector<std::vector<double>> a = { // matriz a de coeficientes
-			{3, -0.1, -0.2},
-			{0.1, 7.0, -0.3},
-			{0.3, -0.2, 10}
+			{1, 2},
+			{1.05, 2},
 		};
-		std::vector<double> b = { {7.85,19.30,71.40} }; // Terminos independientes principales
+		std::vector<double> b = { {10.00,10.40} }; // Terminos independientes principales
 		std::vector<std::vector<double>> factors{ // Matriz de los multiplicadores m de gauss
 			{0,0,0},
 			{0,0,0},
@@ -168,15 +169,31 @@ int main() {
 		unidad2 = true;
 		break;
 	}
+	case 9: {
+		int n = 2;
+		// Crear la matriz A de tamaño n x n
+		vector<vector<double>> A = {
+			{1,2},
+			{1.10,2}
+		};
+		// Calcular el número de condición
+		double condicion = condicion::numeroDeCondicion(A, n);
+
+		if (condicion != -1) {
+			cout << "El número de condición de la matriz es: " << condicion << endl;
+		}
+		break;
+	}
 	default:
 		break;
 	}
 	bool DyI = false;
 
-	system("cls");
+	
 
 	if (unidad2 == true)
 	{
+		system("cls");
 		std::cout << "--------------" << std::endl;
 		std::cout << "UNIDAD 2" << std::endl;
 		std::cout << "--------------" << std::endl;
